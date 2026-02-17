@@ -1,40 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+####  Medyanes 360 – Full Stack Todo App  ####
 
-## Getting Started
+Bu proje, Next.js, MongoDB, Prisma ORM ve Zustand kullanılarak geliştirilmiş fullstack bir Todo uygulamasıdır. Amaç modern bir fullstack mimari kurarak CRUD akışını uçtan uca yönetmektir.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+ # Kullanılan Teknolojiler
+  • Next.js (Pages Router & API Routes)
+  • MongoDB Atlas
+  • Prisma ORM
+  • Zustand (Global State Management)
+  • Tailwind CSS
+  • Thunder Client (API testleri)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+ # Proje Mimarisi
+/components   → UI bileşenleri
+/services     → API istek katmanı
+/store        → Global state yönetimi
+/lib          → Ortak yardımcı dosyalar (Prisma instance)
+/pages/api    → Backend API route’ları
+/styles       → Global stil dosyaları
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+# Katmanlı Mimari Yaklaşımı
+ • Components: Tekrar kullanılabilir UI parçaları.
+ • Services: API çağrılarını merkezi bir noktada toplar.
+ • Store (Zustand): Global state yönetimini sağlar.
+ • Lib: Prisma instance’ı tek noktadan yönetmek için kullanılır.
+ • API Routes: Backend CRUD işlemlerini barındırır.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+# Backend Yapısı
+   Health Endpoint
+       İlk olarak /api/health endpoint’i oluşturularak API katmanının database bağlantısından bağımsız çalıştığı doğrulandı.
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+# MongoDB Atlas
+ • Free Tier cluster oluşturuldu.
+ • Database user tanımlandı.
+ • Development ortamı için IP whitelist ayarlandı.
+ • Connection string güvenlik için .env.local içinde saklandı.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+# Prisma ORM
+ MongoDB ile doğrudan çalışmak yerine Prisma ORM kullanıldı.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  Avantajları:
+    • Schema üzerinden model tanımlama
+    •	Tip güvenliği
+    •	Düzenli ve sürdürülebilir CRUD yapısı
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+# Todo Modeli
+  Prisma schema üzerinden Todo modeli tanımlandı:
+    •	id
+    •	title
+    •	description
+    •	status (Boolean, default: false)
+    •	createdAt
+    •	updatedAt
+
+   Prisma Client generate edilerek veritabanı bağlantısı doğrulandı.
+
+   Prisma instance tek bir dosyada (lib/prisma.js) oluşturuldu ve API route’larda import edilerek kullanıldı.
+
+ # API Routes – CRUD
+
+   /api/todos endpoint’i üzerinden:
+     •	GET → Tüm todoları getirir
+     •	POST → Yeni todo oluşturur
+     •	PUT → Todo günceller
+     •	DELETE → Todo siler
+
+   Her method için HTTP kontrolü yapılmış ve hata yönetimi try/catch bloklarıyla sağlanmıştır.
+
+
+ # Frontend Yapısı
+    Zustand Store
+     Global state içinde:
+	• todos
+	• loading
+	• error
+
+     CRUD işlemlerinde:
+	1. Önce services üzerinden API çağrısı yapılır.
+	2. Sonuç store state’ine yansıtılır.
+	3. UI refresh olmadan güncellenir.
+
+
+ # TodoForm
+   • useState ile form verisi tutulur.
+   • Submit edildiğinde store’daki addTodo fonksiyonu çağrılır.
+   • Başlık zorunlu, açıklama opsiyoneldir.
+   • Başarılı işlem sonrası inputlar temizlenir.
+
+
+ # TodoList & TodoItem
+   • Liste map ile render edilir.
+   • Her todo ayrı bir component olarak tasarlanmıştır.
+   • Checkbox ile status toggle edilir.
+   • Delete butonu ile todo silinir.
+   • UI state üzerinden otomatik güncellenir.
+
+ # UI
+  • Tailwind CSS ile responsive tasarım
+  • Soft pembe arka plan
+  • Glass-effect kart tasarımı
+  • Modern ve sade arayüz yaklaşımı
+
+ # API Testleri
+  Thunder Client ile:
+   • GET → 200 OK
+   • POST → 201 Created
+   • PUT → 200 OK
+   • DELETE → 200 OK
+
+   CRUD akışı backend seviyesinde ayrıca doğrulanmıştır.
+
+
+
+ # Sonuç
+  Bu proje ile:
+   • Fullstack mimari kurma
+   • API route yapısı
+   • Prisma ORM ile modelleme
+   • MongoDB bağlantı güvenliği
+   • Zustand ile global state yönetimi
+
+   konularında pratik deneyim kazanılmıştır.
